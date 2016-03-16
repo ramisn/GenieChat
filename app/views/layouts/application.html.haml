@@ -1,0 +1,13 @@
+!!!
+%html{ng: {app: 'app'}}
+  %head
+    %title GenieChat
+    = stylesheet_link_tag 'application', media: 'all'
+    = csrf_meta_tags
+
+%body{id: @body_id || bodytag_id}
+  = render partial: 'shared/header'
+  = yield
+  = include_gon
+  = javascript_include_tag 'application', 'https://api.bistri.com/bistri.conference.min.js'
+  = yield :js_footer

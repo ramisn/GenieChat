@@ -1,0 +1,15 @@
+%form{ng: {submit: 'createRoom()'}}
+  .modal-header
+    %button.close{type: 'button', ng: {click: '$dismiss()'}} &times;
+    %h4.modal-title New Room
+
+  .modal-body
+    .form-group
+      %label
+        Give your room a name
+        %span.text-muted (good name are #{Room::NAME_MAX_LENGTH} characters or less)
+      %input.form-control{type: 'text', required: true, ng: {model: 'room.name'}, textfield: {focus: 'true'}}
+      
+  .modal-footer
+    %button.btn.btn-primary{type: 'submit'} Create
+    %button.btn.btn-link{type: 'button', ng: {click: '$dismiss()'}} cancel

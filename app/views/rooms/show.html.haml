@@ -1,0 +1,71 @@
+%main.container{ng: {controller: 'ChatRoomController', init: "setupRoom()"}}
+  / = render partial: 'shared/browser_warning'
+  .row
+    #messages-area.col-lg-10
+      .ng-cloak{ng: {switch: 'messages.length'}}
+        .well{ng: {switch_when: '0'}}
+          .lead.text-info
+            %i.fa.fa-comments-o
+            No messages yet
+
+          Be the first one to send a chat message.
+
+        %div{ng: {switch: {defaults: ''}}}
+          .media.message.ng-cloak{ng: {repeat: 'message in messages track by message.id'}}
+            .pull-left
+              %img.img-framed{ng: {src: '{{ message.user.avatar_url }}'}, width: 40}
+            .media-body
+              .media-heading
+                %strong.ng-cloak {{ message.user.name }}
+                %time.text-muted.pull-right
+                  %small.ng-cloak
+                    %i.fa.fa-clock-o
+                    {{ message.created_at | amCalendar }}
+              %div {{ message.content }}
+
+    .col-lg-2.text-right
+      %aside#room-sidebar{sticky: {on_scroll: {topSpacing: 70, bottomSpacing: 20}.to_json}}
+        .lead= @room.name
+
+        / %ul.list-inline
+        /   %li
+        /     / Invite Friends
+        /     %button.btn.btn-success.btn-sm{ng: {click: 'showInvitationForm()'}}
+        /       %i.ti-email
+
+        /   %li
+        /     / Enable Video
+        /     %button.btn.btn-warning.btn-sm.js-video-start{data: {text_on: 'Enable Video', text_off: 'Disable Video'}, tooltip: 'Sometimes, it takes a while for the request to be processed. If nothing happens when you click this button, try refresh the browser and click on it again.', :'tooltip-placement' => 'left'}
+        /       %i.ti-video-camera
+
+        /   %li
+        /     / File Upload
+        /     %button.btn.btn-primary.btn-sm{ng: {file_select: 'onFileSelect($files)'}, data: {multiple: true}, onclick: 'this.value=null'}
+        /       %i.fa.fa-upload
+
+        %h5.ng-cloak.text-right.double-top-spacing
+          %i.fa.fa-circle.text-success
+          %span{ng: {bind_template: 'Online ({{ onlineMembersCount }})'}}
+
+        %ul.list-unstyled.double-top-spacing.list-with-spacing
+          %li.ng-cloak{bindonce: '', ng: {repeat: 'member in onlineMembers'}}
+            %a{bo: {href: 'member.url'}, target: '_blank'}
+              %img.img-framed{bo: {src: 'member.avatar_url'}, width: 22}
+              %span{bo: {text: 'member.name'}}
+
+        #videos-list
+        %ul#files-list.list-unstyled
+          %li{ng: {repeat: 'file in files'}}
+            %a{ng: {href: '{{ file.path }}'}, target: '_blank'} {{ file.file_file_name }}
+
+  %form#message-box{ng: {submit: 'postMessage()'}}
+    %input.form-control{type: 'text', placeholder: 'Enter a message', ng: {model: 'message'}, required: true, autofocus: true}
+    %button.btn.btn-primary{type: 'submit'}
+      %i.fa.fa-paper-plane
+      Send
+
+  %audio{media: {player: 'messageSound'}, volumn: '0.05'}
+    %source{src: '/job-done.mp3', type: 'audio/mpeg'}
+
+- content_for :js_footer do
+  = javascript_include_tag 'conference'

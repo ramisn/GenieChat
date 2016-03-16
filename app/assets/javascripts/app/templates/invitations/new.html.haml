@@ -1,0 +1,20 @@
+%form{ng: {submit: 'createInvitation()'}}
+  .modal-header
+    %button.close{type: 'button', ng: {click: '$dismiss()'}} &times;
+    %h4.modal-title Invitation
+
+  .modal-body
+    .form-group
+      %label Invitees
+      %tags-input.bootstrap{ng: {model: 'invitation.emails'}, placeholder: 'Add an email'}
+    .form-group
+      %label Subject
+      %input.form-control{type: 'text', required: true, ng: {model: 'invitation.subject'}}
+
+    .form-group
+      %label Message
+      %textarea.form-control{rows: 8, required: true, ng: {model: 'invitation.message'}}
+
+  .modal-footer
+    %button.btn.btn-primary{type: 'submit'} Submit
+    %button.btn.btn-link{type: 'button', ng: {click: '$dismiss()'}} cancel

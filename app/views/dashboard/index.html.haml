@@ -1,0 +1,22 @@
+.container{ng: {controller: 'RoomsController'}}
+  %h1.page-header
+    Rooms
+
+  %p
+    %button.btn.btn-lg.btn-success{ng: {click: 'showRoomForm()'}}
+      %i.ti-plus
+      New Room
+
+  .row.double-top-spacing
+    .col-lg-4.ng-cloak{ng: {if: 'rooms.length', repeat: 'room in rooms'}}
+      .chat-room
+        .header
+          %i.ti-comments-smiley
+          %span{title: '{{ room.name }}'} {{ room.name | characters:25 }}
+        .body
+          %a.btn.btn-primary{ng: {href: '/rooms/{{ room.slug }}'}, target: '_self'}
+            %i.ti-arrow-circle-right
+            Join
+          %a.btn.btn-success{ng: {click: 'showInvitationForm(room)'}}
+            %i.ti-email
+            Invite Friends
