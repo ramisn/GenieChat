@@ -6,9 +6,9 @@
 
 # Ignore bundler config.
 /.bundle
-/app
-/config
-/db
+app
+config
+db
 
 
 # Ignore the default SQLite database.
