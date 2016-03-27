@@ -6,10 +6,6 @@
 
 # Ignore bundler config.
 /.bundle
-/app/*
-/config/*
-/db/*
-
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
@@ -19,3 +15,7 @@
 /log/*.log
 /tmp
 vendor/assets/components
+database.yml
+app/*
+config/*
+db/*
