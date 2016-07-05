@@ -5,7 +5,7 @@ source 'https://rails-assets.org'
 gem 'rails', '4.0.2'
 
 # Use sqlite3 as the database for Active Record
-gem 'mysql2'
+# gem 'mysql2'
 # gem 'pg'
 
 # Use SCSS for stylesheets
