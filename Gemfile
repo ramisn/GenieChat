@@ -34,7 +34,7 @@ gem 'devise'
 gem 'quiet_assets'
 gem 'ngmin-rails'
 gem 'thin'
-gem 'therubyracer'
+# gem 'therubyracer'
 gem 'pg', '0.15.1'
 gem 'execjs'
 gem 'friendly_id'
@@ -91,7 +91,15 @@ end
 # gem 'unicorn'
 
 # Use Capistrano for deployment
-# gem 'capistrano', group: :development
+gem 'figaro'
+group :development do
+  gem 'capistrano'
+  gem 'capistrano3-puma'
+  gem 'capistrano-rails', require: false
+  gem 'capistrano-bundler', require: false
+  gem 'capistrano-rvm'
+end
+gem 'puma'
 gem "erb2haml", :group => :development
 
 # Use debugger
