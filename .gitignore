@@ -17,5 +17,5 @@
 vendor/assets/components
 database.yml
 app/*
-config/*
+# config/*
 db/*

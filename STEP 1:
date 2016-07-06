@@ -1,0 +1,176 @@
+STEP 1:
+
+Add Capistrona and Puma gem
+Do bundle install
+
+STEP 2: 
+
+cap install STAGES=production
+
+STEP 3:
+Create a new intance in AWS
+Download new keypair and move that file to .ssh folder in local machine
+chmod 400 geniechat.pem
+
+STEP 4:
+VM Server Settings:
+To login Server:
+
+ssh -i "geniechat.pem" ubuntu@ec2-52-39-198-230.us-west-2.compute.amazonaws.com
+
+update and upgrade ur server
+sudo apt-get update & sudo apt-get -y upgrade
+
+Create a New User with password
+
+sudo useradd -d /home/rami -m rami
+sudo passwd rami
+
+STEP 5:
+
+Execute sudo visudo and add the line
+rami ALL=(ALL:ALL) ALL
+
+STEP 6: 
+
+Login to User
+
+su - rami
+ssh-keygen
+
+STEP 7:
+Copy id_rsa.pub key and deploy into github
+And check it can be connected,
+
+ssh -T git@github.com
+
+
+STEP 8:
+
+Copy local machine public key into server authorized_keys.
+
+STEP 9:
+																								
+install git in server
+
+sudo apt-get install git
+
+Install Nginx Server
+
+sudo apt-get install nginx
+
+Edit Ngnix configuration file
+
+sudo vi /etc/nginx/sites-available/default		
+
+copy and Paste this,
+
+upstream app {
+  # Path to Puma SOCK file, as defined previously
+  server unix:/home/rami/GenieChat/shared/tmp/sockets/puma.sock fail_timeout=0;
+}
+
+server {
+  listen 80;
+  server_name localhost;
+
+  root /home/rami/GenieChat/current/public;
+
+  try_files $uri/index.html $uri @app;
+
+  location / {
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header Host $host;
+    proxy_redirect off;
+    proxy_http_version 1.1;
+    proxy_set_header Connection '';
+    proxy_pass http://app;
+  }
+
+  location ~ ^/(assets|fonts|system)/|favicon.ico|robots.txt {
+    gzip_static on;
+    expires max;
+    add_header Cache-Control public;
+  }
+
+  error_page 500 502 503 504 /500.html;
+  client_max_body_size 4G;
+  keepalive_timeout 10;
+} 
+
+STEP 10:
+
+Install Postgresql
+
+sudo apt-get install postgresql postgresql-contrib libpq-dev
+
+Create a new User:
+
+sudo -u postgres createuser -s rami
+
+Set Password:
+
+sudo -u postgres psql
+\password rami
+
+Create a Database:
+
+sudo -u postgres createdb -O rami geniechat_prod
+
+STEP 11:
+
+Install RVM in Server
+
+gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+\curl -sSL https://get.rvm.io | bash -s stable
+
+source /home/rami/.rvm/scripts/rvm
+
+rvm install 2.0.0
+
+gem install bundler --no-ri --no-rdoc
+
+STEP 12:
+mkdir -p GenieChat/shared/config
+
+create database.yml and paste
+sudo vi GenieChat/shared/config/database.yml
+
+production:
+  adapter: postgresql
+  encoding: unicode
+  database: geniechat_prod
+  username: rami
+  password: ramibe26
+  host: localhost
+  port: 5432
+
+create database.yml and paste
+sudo vi GenieChat/shared/config/application.yml
+
+SECRET_KEY_BASE: "8a2ff74119cb2b8f14a85dd6e213fa24d8540fc34dcaa7ef8a35c246ae452bfa8702767d19086461ac911e1435481c22663fbd65c97f21f6a91b3fce7687ce63"
+
+
+STEP 13:
+
+Deploy:
+
+cap production deploy
+
+STEP 14:
+
+Restart the Nginx Server
+
+sudo service nginx restart
+
+
+
+
+ 																																																																																																			
+
+
+
+
+
